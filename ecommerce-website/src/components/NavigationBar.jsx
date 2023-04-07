@@ -69,7 +69,7 @@ const SearchInput = styled.input`
 `;
 
 const RightSide = styled.div`
-  flex: 1;
+  flex: 1; 
   align-items: center;
   justify-content: flex-end;
   display: flex;
