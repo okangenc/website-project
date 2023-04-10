@@ -9,6 +9,7 @@ import Footer from '../components/Footer'
 // MUI icons
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import { useSelector } from 'react-redux'
 
 const Container = styled.div`
 
@@ -106,9 +107,9 @@ const Button = styled.button`
 // product image, details, quantity and price all within this
 const ProductContainer = styled.div`
     display: flex;
-    justify-content: space-between;
-    // background-color: aqua;
-`
+    flex-direction: column;
+`;
+
 
 const Product = styled.div`
     flex: 2;
@@ -155,11 +156,13 @@ const Quantity = styled.div`
     margin: 16px;
 `
 
+/*
 const Hr = styled.hr`
     background-color: lightgray;
     border: none;
     height: 1px;
 `
+*/
 
 const Price = styled.div`
     flex: 1;
@@ -181,142 +184,109 @@ const Size = styled.span``
 
 
 const ShoppingCartPage = () => {
-  return (
-    <Container>
 
-        <BannerBar/>
-        <NavigationBar/>
-        <CategoriesBar/>
+    const cart = useSelector((state) => state.cart);
+    const shippingFee = 3;
+    const grandTotal = cart.total + shippingFee;
 
-        <Wrapper>
+    return (
+        <Container>
 
-            <Title>
-                YOUR SHOPPING CART
-            </Title>
+            <BannerBar/>
+            <NavigationBar/>
+            <CategoriesBar/>
 
-            <TopWrapper>
-                <TopButton>
-                    CONTINUE SHOPPING
-                </TopButton>
-                <TopTextContainer>
-                    <TopText>
-                        SHOPPING CART (2)
-                    </TopText>
-                    <TopText>
-                        BOOKMARKED PRODUCTS (0)
-                    </TopText>
-                </TopTextContainer>
+            <Wrapper>
 
-            </TopWrapper>
+                <Title>
+                    YOUR SHOPPING CART
+                </Title>
 
-            <BottomWrapper>
+                <TopWrapper>
+                    <TopButton>
+                        CONTINUE SHOPPING
+                    </TopButton>
+                    <TopTextContainer>
+                        <TopText>
+                            SHOPPING CART (2)
+                        </TopText>
+                        <TopText>
+                            BOOKMARKED PRODUCTS (0)
+                        </TopText>
+                    </TopTextContainer>
+                </TopWrapper>
 
-                <InfoContainer>
+                <BottomWrapper>
+                    <InfoContainer>
+                        <ProductContainer>
+                            {cart.products.map(product => (
 
-                    <ProductContainer>
+                            
+                            <Product>
+                                <Image src = {product.image} />
+                                <Details>
+                                    <Name>
+                                        <b>PRODUCT:</b> {product.name}
+                                    </Name>
+                                    <ID>
+                                        <b>ID:</b> {product._id}
+                                    </ID>
+                                    <Colour>
+                                        <b>COLOUR:</b> {product.colour}
+                                    </Colour>
+                                    <Size>
+                                        <b>SIZE:</b> {product.size}
+                                    </Size>
+                                </Details>
 
-                        <Product>
-                            <Image src = "https://images.unsplash.com/photo-1605235185922-7dccaf4ef5ba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"/>
-                            <Details>
-                                <Name>
-                                    <b>PRODUCT:</b> PURPLE SPORTS JACKET
-                                </Name>
-                                <ID>
-                                    <b>ID:</b> 82374982678
-                                </ID>
-                                <Colour>
-                                    <b>COLOUR:</b> PURPLE
-                                </Colour>
-                                <Size>
-                                    <b>SIZE:</b> S
-                                </Size>
-                            </Details>
+                                <QuantityAndPrice>
 
-                            <QuantityAndPrice>
+                                    <QuantityContainer>
+                                        <RemoveCircleOutlineOutlinedIcon/>
+                                        <Quantity> {product.quantity} </Quantity>
+                                        <AddCircleOutlineOutlinedIcon/>
+                                    </QuantityContainer>
 
-                                <QuantityContainer>
-                                    <RemoveCircleOutlineOutlinedIcon/>
-                                    <Quantity>2</Quantity>
-                                    <AddCircleOutlineOutlinedIcon/>
-                                </QuantityContainer>
+                                    <Price> £ {product.price * product.quantity} </Price>
 
-                                <Price> £ 20 </Price>
+                                </QuantityAndPrice>
 
-                            </QuantityAndPrice>
+                            </Product>
+                            ))}
 
-                        </Product>
+                        </ProductContainer>
 
-                    </ProductContainer>
+                        
+                    </InfoContainer>
 
-                    <Hr/>
+                    <SummaryContainer>
+                        <SummaryTitle> ORDER SUMMARY </SummaryTitle>
 
-                    <ProductContainer>
+                        <SummaryItem>
+                            <SummaryText> SUBTOTAL </SummaryText>
+                            <SummaryPrice> £ {cart.total} </SummaryPrice>
+                        </SummaryItem>
 
-                        <Product>
-                            <Image src = "https://images.unsplash.com/photo-1625708458528-802ec79b1ed8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"/>
-                            <Details>
-                                <Name>
-                                    <b>PRODUCT:</b> WATER BOTTLES
-                                </Name>
-                                <ID>
-                                    <b>ID:</b> 72638275631
-                                </ID>
-                                <Colour>
-                                    <b>COLOUR:</b> ORANGE
-                                </Colour>
-                                <Size>
-                                    <b>SIZE:</b> ONE SIZE
-                                </Size>
-                            </Details>
+                        <SummaryItem>
+                            <SummaryText> SHIPPING </SummaryText>
+                            <SummaryPrice> £{shippingFee} </SummaryPrice>
+                        </SummaryItem>
 
-                            <QuantityAndPrice>
+                        <SummaryItem type="total">
+                            <SummaryText> TOTAL </SummaryText>
+                            <SummaryPrice> £ {grandTotal} </SummaryPrice>
+                        </SummaryItem>
 
-                                <QuantityContainer>
-                                    <RemoveCircleOutlineOutlinedIcon/>
-                                    <Quantity>2</Quantity>
-                                    <AddCircleOutlineOutlinedIcon/>
-                                </QuantityContainer>
+                        <Button> CHECKOUT </Button>
+                    </SummaryContainer>
 
-                                <Price> £ 20 </Price>
+                </BottomWrapper>
+            </Wrapper>
 
-                            </QuantityAndPrice>
+            <Footer/>
 
-                        </Product>
-
-                    </ProductContainer>
-
-                </InfoContainer>
-
-                <SummaryContainer>
-
-                    <SummaryTitle> ORDER SUMMARY </SummaryTitle>
-
-                    <SummaryItem>
-                        <SummaryText> SUBTOTAL </SummaryText>
-                        <SummaryPrice> £40 </SummaryPrice>
-                    </SummaryItem>
-
-                    <SummaryItem>
-                        <SummaryText> SHIPPING </SummaryText>
-                        <SummaryPrice> £3 </SummaryPrice>
-                    </SummaryItem>
-
-                    <SummaryItem type = "total">
-                        <SummaryText> TOTAL </SummaryText>
-                        <SummaryPrice> £43 </SummaryPrice>
-                    </SummaryItem>
-
-                    <Button> CHECKOUT </Button>
-
-                </SummaryContainer>
-
-            </BottomWrapper>
-        </Wrapper>
-
-        <Footer/>
-
-    </Container>
-  )
+        </Container>
+    )
 }
 
 export default ShoppingCartPage

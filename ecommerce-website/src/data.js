@@ -24,21 +24,25 @@ export const categoriesContent = [
         id: 1,
         image: "https://images.unsplash.com/photo-1642733919089-de5d4bd6484b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=708&q=80",
         header: "MENS CLOTHING",
+        category: "mens",
     },
     {
         id: 2,
         image: "https://images.unsplash.com/photo-1606902965551-dce093cda6e7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
         header: "WOMENS CLOTHING",
+        category: "womens",
     },
     {
         id: 3,
         image: "https://images.unsplash.com/photo-1605050825021-0de4d256fcb7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
         header: "ACCESSORIES",
+        category: "accessories",
     },
     {
         id: 4,
         image: "https://images.unsplash.com/photo-1618073193718-23a66109f4e6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
         header: "EQUIPMENT",
+        category: "equipment",
     },
 ]
 

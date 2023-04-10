@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
@@ -8,6 +8,15 @@ import NavigationBar from '../components/NavigationBar';
 import CategoriesBar from '../components/CategoriesBar';
 // import footer
 import Footer from '../components/Footer';
+// import useLocation hook from react-router-dom
+import { useLocation } from "react-router-dom";
+// import publicRequest from requestMethods
+import { publicRequest } from '../requestMethods';
+// import dispatch hook from react-redux
+import { useDispatch } from "react-redux";
+// import addProduct from shoppingCartRedux
+import { addProduct } from "../redux/shoppingCartRedux";
+
 
 const Container = styled.div``;
 
@@ -99,7 +108,7 @@ const AddToCartButton = styled.button`
   font-size: 20px;
   padding: 15px;
   background-color: #a8e7f5;
-  color: white;
+  color: white; 
   border: none;
   cursor: pointer;
   transition: transform 0.2s;
@@ -132,17 +141,46 @@ const ButtonAndScaleContainer = styled.div`
 `;
 
 const ProductPage = () => {
+
+    const location = useLocation();
+    const id = location.pathname.split("/")[2]
+    const [product, setProduct] = useState({});
+    const dispatch = useDispatch()
+
+    useEffect (() => {
+      const getProduct = async () => {
+        try {
+          const res = await publicRequest.get("/products/find/" + id)
+          setProduct(res.data);
+        } catch{}
+      };
+      getProduct()
+    }, [id])
+
+
     const [quantity, setQuantity] = useState(1);
   
+    // function allows the user to increase the quantity
+    // maxiumum quantity limit of 9
     const handleIncrement = () => {
-      setQuantity(quantity + 1);
+      if (quantity < 9) {
+        setQuantity(quantity + 1);
+      }
     };
   
+    // function allows user to decrease the quantity
     const handleDecrement = () => {
       if (quantity > 1) {
         setQuantity(quantity - 1);
       }
     };
+
+    const handleClick = () => {
+      dispatch(
+        addProduct ({ ...product, quantity })
+        );
+      };
+           
   
     return (
       <Container>
@@ -152,21 +190,21 @@ const ProductPage = () => {
   
         <Wrapper>
           <ImageContainer>
-            <Image src="https://images.unsplash.com/photo-1605235185922-7dccaf4ef5ba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" />
+            <Image src={product.image} />
           </ImageContainer>
   
           <Information>
-            <Name>Women's Purple BreezeLite Sports Jacket</Name>
+            <Name> {product.name} </Name>
   
             <InfoRow>
               <InfoContainer>
                 <InfoTitle> PRICE: </InfoTitle>
-                <Price> £ 20 </Price>
+                <Price> {product.price} </Price>
               </InfoContainer>
   
               <InfoContainer>
                 <InfoTitle> COLOUR: </InfoTitle>
-                <Colour> PURPLE </Colour>
+                <Colour> {product.colour} </Colour>
               </InfoContainer>
   
               <InfoContainer>
@@ -175,15 +213,10 @@ const ProductPage = () => {
               </InfoContainer>
             </InfoRow>
   
-            <Description>
-              Elevate your activewear game with the Women's Purple BreezeLite Sports Jacket,
-              a perfect blend of cutting-edge technology and stunning design.
-              Specially crafted for active women who seek both style and functionality,
-              this lightweight and breathable jacket delivers ultimate comfort and performance
-              during your workouts and outdoor activities.
-            </Description>
+            <Description> {product.description} </Description>
   
             <ButtonAndScaleContainer>
+
               <QuantityControl>
                 <IconWrapper onClick={handleDecrement}>
                   <RemoveCircleOutlineOutlinedIcon fontSize="large" />
@@ -193,7 +226,11 @@ const ProductPage = () => {
                   <AddCircleOutlineOutlinedIcon fontSize="large" />
                 </IconWrapper>
               </QuantityControl>
-              <AddToCartButton>ADD TO CART</AddToCartButton>
+
+              <AddToCartButton onClick = {handleClick}>
+                ADD TO CART
+              </AddToCartButton>
+
             </ButtonAndScaleContainer>
           </Information>
         </Wrapper>

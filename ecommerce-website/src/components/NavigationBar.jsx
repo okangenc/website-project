@@ -4,6 +4,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Badge from '@mui/material/Badge';
 import BoltIcon from '@mui/icons-material/Bolt';
+// import useSelector hook from react-redux
+import { useSelector } from "react-redux"
+import { Link } from 'react-router-dom';
 
 const changeColours = keyframes`
 // changes the colour of the bolt to match the colour change of the banner bar
@@ -82,7 +85,11 @@ const NavBarItems = styled.div`
   margin-left: 40px;
 `;
 
+// axion hook for the shopping cart icon
 const NavigationBar = () => {
+
+  const quantity = useSelector(state => state.cart.quantity)
+  
   return (
     <Container>
       <Wrapper>
@@ -102,11 +109,16 @@ const NavigationBar = () => {
         <RightSide>
           <NavBarItems>LOGIN</NavBarItems>
           <NavBarItems>REGISTER</NavBarItems>
-          <NavBarItems>
-            <Badge badgeContent={4} color="primary">
-              <ShoppingCartOutlinedIcon />
-            </Badge>
-          </NavBarItems>
+
+          <Link to = "/shoppingcart">
+            <NavBarItems>
+              <Badge badgeContent={quantity} color="primary">
+                <ShoppingCartOutlinedIcon />
+              </Badge>
+            </NavBarItems>
+          </Link>
+
+
         </RightSide>
       </Wrapper>
     </Container>

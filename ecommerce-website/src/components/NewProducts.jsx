@@ -6,6 +6,7 @@ import React from 'react'
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
+import { Link } from 'react-router-dom';
 
 const Options = styled.div`
     position: absolute;
@@ -86,7 +87,9 @@ const NewProducts = ({item}) => {
                   <AddShoppingCartOutlinedIcon/> 
               </Icon>
               <Icon>
-                  <SearchOutlinedIcon/> 
+                <Link to = { `/product/${item._id}` }>
+                    <SearchOutlinedIcon/> 
+                </Link>
               </Icon>
               <Icon>
                   <StarBorderOutlinedIcon/> 

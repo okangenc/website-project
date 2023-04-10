@@ -7,6 +7,10 @@ import CategoriesBar from '../components/CategoriesBar'
 // import other page components
 import LandingProducts from '../components/LandingProducts'
 import Footer from '../components/Footer'
+// import useLocation hook
+import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+
 
 const Container = styled.div`
     
@@ -42,6 +46,20 @@ const Select = styled.select`
 `
 
 const CategoryPage = () => {
+    const location = useLocation();
+    const category = location.pathname.split("/")[2]
+    const [filter, setFilter] = useState({})
+    const [sort, setSort] = useState("newest")
+
+    const handleFilter = (event) => {
+        const value = event.target.value;
+        setFilter ({
+            ...filter,
+            [event.target.name]: value.toLowerCase(), // database items in array will need to be lowercase
+        });
+    };
+
+
   return (
     <Container>
 
@@ -50,7 +68,7 @@ const CategoryPage = () => {
         <CategoriesBar/>
 
         <Title>
-            MENS CLOTHING
+            { category }
         </Title>
 
         <FilterContainer>
@@ -59,10 +77,10 @@ const CategoryPage = () => {
                     SORT
                 </FilterHeader>
 
-                <Select>
-                    <Option disabled selected> NEWEST </Option>
-                    <Option> PRICE (ASCENDING) </Option>
-                    <Option> PRICE (DESCENDING) </Option>
+                <Select onChange = { event => setSort(event.target.value)}>
+                    <Option value = "newest"> NEWEST </Option>
+                    <Option value = "ascending"> PRICE (ASCENDING) </Option>
+                    <Option value = "descending"> PRICE (DESCENDING) </Option>
                 </Select>
 
             </FilterOptions>
@@ -71,8 +89,8 @@ const CategoryPage = () => {
                     FILTER
                 </FilterHeader>
 
-                <Select>
-                    <Option disabled selected> SIZE </Option>
+                <Select name="size" onChange = { handleFilter }>
+                    <Option disabled> SIZE </Option>
                     <Option> XS </Option>
                     <Option> S </Option>
                     <Option> M </Option>
@@ -81,8 +99,8 @@ const CategoryPage = () => {
                     <Option> XXL </Option>
                 </Select>
 
-                <Select>
-                    <Option disabled selected> COLOUR </Option>
+                <Select name="colour" onChange = { handleFilter }>
+                    <Option disabled> COLOUR </Option>
                     <Option> BLACK </Option>
                     <Option> WHITE </Option>
                     <Option> GRAY </Option>
@@ -99,7 +117,7 @@ const CategoryPage = () => {
             </FilterOptions>
         </FilterContainer>
 
-        <LandingProducts/>
+        <LandingProducts category={category} filter={filter} sort={sort} />
 
         <Footer/>
 
