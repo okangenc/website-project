@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import BoltIcon from '@mui/icons-material/Bolt';
+import { login } from '../redux/apiCalls';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Container = styled.div`
   display: flex;
@@ -115,7 +117,23 @@ const AnimatedBoltIcon = styled(BoltIcon)`
   margin-right: 10px;
 `;
 
+const LoginError = styled.span`
+  color: red;
+`
+
 const LoginPage = () => {
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const {isFetching, error} = useSelector((state) => state.user);
+
+  const handleClick = (event) => {
+    event.preventDefault()
+    login(dispatch, {username, password});
+  }
+
     return (
       <Container>
         <LeftSide>
@@ -125,11 +143,15 @@ const LoginPage = () => {
             <LogoText>A R</LogoText>
           </TopLogo>
           <Title>SIGN-IN TO YOUR ACCOUNT</Title>
-          <Input type="text" placeholder="USERNAME" />
-          <Input type="password" placeholder="PASSWORD" />
-          <Button>SIGN-IN</Button>
-          <BottomText>DON'T HAVE AN ACCOUNT?</BottomText>
-          <SignUp>SIGN-UP</SignUp>
+
+          <Input type="text" placeholder="USERNAME" onChange = {(event) => setUsername(event.target.value)} />
+          <Input type="password" placeholder="PASSWORD" onChange = {(event) => setPassword(event.target.value)} />
+          <Button onClick = {handleClick} disabled = {isFetching}> SIGN-IN </Button>
+
+          { error && <LoginError> INVALID LOGIN </LoginError>}
+
+          <BottomText> DON'T HAVE AN ACCOUNT? </BottomText>
+          <SignUp> SIGN-UP </SignUp>
         </LeftSide>
         <RightSide>
           <BackgroundImage />

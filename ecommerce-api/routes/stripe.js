@@ -34,6 +34,7 @@ router.post("/create-checkout-session", async (req, res) => {
   }
 });
 
+module.exports = router;
 
 /*
 router.post("/create-checkout-session", async (req, res) => {
@@ -67,6 +68,3 @@ router.post("/create-checkout-session", async (req, res) => {
   }
 });
 */
-
-module.exports = router;
-

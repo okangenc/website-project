@@ -12,8 +12,11 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-d
 import Payment from "./stripe/Payment";
 import Success from "./stripe/Success";
 
+// import useSelector from react redux
+import { useSelector } from 'react-redux';
+
 const App = () => {
-  const user = true;
+  const user = useSelector(state => state.user.currentUser);
   return (
     <Router>
       <Routes>

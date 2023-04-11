@@ -49,3 +49,40 @@ app.use("/api", stripeRoute); // Register the new Stripe route with the '/api' b
 app.listen(3000, () => {
   console.log("Backend server is running");
 });
+
+// webhooks for stripe payment
+// this is only needed when the website is deployed and is essntial for handling asynchronous events
+
+/*
+const bodyParser = require('body-parser');
+
+// Add this line to parse incoming webhook events as raw JSON
+app.use(bodyParser.raw({ type: 'application/json' }));
+
+// Create a new route for handling webhook events
+app.post('/api/webhooks', async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const event = req.body;
+
+  try {
+    // Add your webhook secret here (available in the Stripe Dashboard)
+    const webhookSecret = 'your_stripe_webhook_secret_here';
+
+    // Verify the event signature using the webhook secret
+    stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+
+      // Handle the successful payment
+      // e.g., update your database, send a confirmation email, etc.
+      console.log('Payment succeeded:', session);
+    }
+
+    res.status(200).send('Event received');
+  } catch (err) {
+    console.error('Error processing webhook event:', err);
+    res.status(400).send('Webhook Error');
+  }
+});
+*/
