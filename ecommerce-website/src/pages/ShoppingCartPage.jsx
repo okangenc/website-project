@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import styled from 'styled-components'
 // import header bars
 import BannerBar from '../components/BannerBar'
@@ -9,7 +9,18 @@ import Footer from '../components/Footer'
 // MUI icons
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { useSelector } from 'react-redux'
+
+// for stripe payments
+import { useSelector } from 'react-redux';
+import { loadStripe } from '@stripe/stripe-js';
+import React, { useCallback } from 'react';
+// for stripe payments
+console.log("Stripe public key:", process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+
+
+
+// import StripeCheckout from "react-stripe-checkout"
 
 const Container = styled.div`
 
@@ -189,6 +200,42 @@ const ShoppingCartPage = () => {
     const shippingFee = 3;
     const grandTotal = cart.total + shippingFee;
 
+
+    const handleCheckout = useCallback(async () => {
+        const stripe = await stripePromise;
+
+        console.log('Fetching /create-checkout-session');
+
+        const response = await fetch('http://localhost:3000/api/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cart }),
+        });
+
+        console.log('Received response from /create-checkout-session');
+        console.log('Response:', response);
+
+        const sessionData = await response.json();
+        console.log('Session Data:', sessionData);
+
+        const sessionId = sessionData.sessionId; // Access sessionId from the sessionData object
+
+        if (sessionId) {
+            const result = await stripe.redirectToCheckout({
+            sessionId: sessionId,
+            });
+
+            if (result.error) {
+            console.error(result.error.message);
+            }
+        } else {
+            console.error('Error: Session ID not found');
+        }
+    }, [cart]);
+
+    
     return (
         <Container>
 
@@ -277,7 +324,8 @@ const ShoppingCartPage = () => {
                             <SummaryPrice> £ {grandTotal} </SummaryPrice>
                         </SummaryItem>
 
-                        <Button> CHECKOUT </Button>
+                        <Button onClick={handleCheckout}>CHECKOUT</Button>
+
                     </SummaryContainer>
 
                 </BottomWrapper>

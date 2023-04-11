@@ -8,6 +8,10 @@ import ProfilePage from "./pages/ProfilePage";
 
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
+// for the stripe payment functionality
+import Payment from "./stripe/Payment";
+import Success from "./stripe/Success";
+
 const App = () => {
   const user = true;
   return (
@@ -20,6 +24,10 @@ const App = () => {
         <Route exact path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
         <Route exact path="/shoppingcart" element={<ShoppingCartPage />} />
         <Route exact path="/profile" element={<ProfilePage />} />
+
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/success" element={<Success />} />
+
       </Routes>
     </Router>
   );
