@@ -9,6 +9,11 @@ import Footer from '../components/Footer'
 // MUI icons
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+
+// for cart functionalities
+import { clearCart, increaseQuantity, decreaseQuantity, removeProduct } from "../redux/shoppingCartRedux";
+import { useDispatch } from "react-redux";
 
 // for stripe payments
 import { useSelector } from 'react-redux';
@@ -18,13 +23,9 @@ import React, { useCallback } from 'react';
 console.log("Stripe public key:", process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-
-
 // import StripeCheckout from "react-stripe-checkout"
 
-const Container = styled.div`
-
-`
+const Container = styled.div``
 
 const Wrapper = styled.div`
     padding: 20px;
@@ -48,17 +49,9 @@ const TopButton = styled.button`
     font-weight: 600;
     cursor: pointer;
     color: black;
-    // reactive button using props
-    // if the cart is empty, button becomes transparent
-    // if the cart is filled, button becomes coloured
-    // border: ${props => props.type === "filled" && "none"};
-    // background-color: ${props => props.type === "filled" ? "#a8e7f5" : "transparent"};
-    // color: ${props => props.type === "filled" && "white"};
 `
 
-const TopTextContainer = styled.div`
-    
-`
+const TopTextContainer = styled.div``
 
 const TopText = styled.span`
     // text-decoration: underline;
@@ -67,13 +60,10 @@ const TopText = styled.span`
 `
 
 // bottom wrapper
+// BottomWrapper contains the InfoContainer and SummaryContainer
 const BottomWrapper = styled.div`
     display: flex;
     justify-content: space-between;
-`
-
-const InfoContainer = styled.div`
-    flex: 3; // 3 units of space occupied
 `
 
 // summary section
@@ -84,9 +74,7 @@ const SummaryContainer = styled.div`
     height: 50vh;
 `
 
-const SummaryTitle = styled.h1`
-
-`
+const SummaryTitle = styled.h1``
 
 const SummaryItem = styled.div`
     margin: 40px 0px;
@@ -97,13 +85,9 @@ const SummaryItem = styled.div`
     font-size: ${props => props.type === "total" && "26px" };
 `
 
-const SummaryText = styled.span`
-    
-`
+const SummaryText = styled.span``
 
-const SummaryPrice = styled.span`
-    
-`
+const SummaryPrice = styled.span``
 
 const Button = styled.button`
     width: 100px;
@@ -114,26 +98,21 @@ const Button = styled.button`
     width: 100%;
 `
 
-
-// product image, details, quantity and price all within this
-const ProductContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
-
-
-const Product = styled.div`
-    flex: 2;
-    display: flex;
-    // background-color: beige;
+const InfoContainer = styled.div`
+    flex: 3; // 3 units of space occupied
 `
 
-// styled componenets for the products displayed
+const Products = styled.div`
+    display: flex;
+`
+
 const Image = styled.img`
     width: 200px;
     height: 200px;
     object-fit: cover;
-`
+    margin-bottom: 20px;
+    background-color: red;
+`;
 
 // for the details next to the image
 const Details = styled.div`
@@ -141,18 +120,19 @@ const Details = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    // background-color: #18b02a;
+    width: 400px;
+    margin-bottom: 20px;
 `
-
 
 const QuantityAndPrice = styled.div`
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    // background-color: #b0b52a;
-    width: 100%;
-`
+    width: 300px;
+    margin-bottom: 20px;
+`;
+
 
 const QuantityContainer = styled.div`
     flex: 1;
@@ -166,14 +146,6 @@ const Quantity = styled.div`
     font-size: 24px;
     margin: 16px;
 `
-
-/*
-const Hr = styled.hr`
-    background-color: lightgray;
-    border: none;
-    height: 1px;
-`
-*/
 
 const Price = styled.div`
     flex: 1;
@@ -193,13 +165,67 @@ const Colour = styled.span``
 
 const Size = styled.span``
 
+const IconContainer = styled.div`
+  cursor: pointer;
+  display: inline-flex;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.3);
+  }
+`;
+
+const DeleteContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  cursor: pointer;
+`;
+
+const StyledRemoveIcon = styled(RemoveCircleOutlineOutlinedIcon)`
+  cursor: pointer;
+  transition: transform 0.3s;
+`;
+
+const StyledAddIcon = styled(AddCircleOutlineOutlinedIcon)`
+  cursor: pointer;
+  transition: transform 0.3s;
+`;
+
+const StyledDeleteIcon = styled(DeleteOutlineOutlinedIcon)`
+  cursor: pointer;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.3);
+    color: #e95555c7;
+  }
+`;
+
+const EmptyCartMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 24px;
+  font-weight: 500;
+  text-align: center;
+`;
 
 const ShoppingCartPage = () => {
 
     const cart = useSelector((state) => state.cart);
-    const shippingFee = 3;
-    const grandTotal = cart.total + shippingFee;
+    const regularDeliveryFee = 3;
+    const deliveryThreshold = 40;
+    const isFreeDelivery = cart.total >= deliveryThreshold;
+    const deliveryFee = isFreeDelivery ? 0 : regularDeliveryFee;
+    const grandTotal = cart.total + deliveryFee;
 
+    // calculate the total number of items in the cart
+    const totalItemsInCart = cart.products.reduce((total, product) => {
+        return total + product.quantity;
+    }, 0);
 
     const handleCheckout = useCallback(async () => {
         const stripe = await stripePromise;
@@ -235,6 +261,25 @@ const ShoppingCartPage = () => {
         }
     }, [cart]);
 
+    // for clearing the cart
+    const dispatch = useDispatch();
+    const handleClearCart = () => {
+        dispatch(clearCart());
+    };
+
+    // for changing the quantities
+    const handleIncreaseQuantity = (id) => {
+        dispatch(increaseQuantity(id));
+    };
+    
+    const handleDecreaseQuantity = (id) => {
+        dispatch(decreaseQuantity(id));
+    };
+
+    // removing product from cart
+    const handleRemoveProduct = (id) => {
+        dispatch(removeProduct(id));
+      };
     
     return (
         <Container>
@@ -250,12 +295,12 @@ const ShoppingCartPage = () => {
                 </Title>
 
                 <TopWrapper>
-                    <TopButton>
-                        CONTINUE SHOPPING
-                    </TopButton>
+                    
+                    <TopButton onClick={handleClearCart}>CLEAR CART</TopButton>
+                    
                     <TopTextContainer>
                         <TopText>
-                            SHOPPING CART (2)
+                            SHOPPING CART ({totalItemsInCart})
                         </TopText>
                         <TopText>
                             BOOKMARKED PRODUCTS (0)
@@ -265,11 +310,11 @@ const ShoppingCartPage = () => {
 
                 <BottomWrapper>
                     <InfoContainer>
-                        <ProductContainer>
+                        
                             {cart.products.map(product => (
 
-                            
-                            <Product>
+                            <Products>
+
                                 <Image src = {product.image} />
                                 <Details>
                                     <Name>
@@ -288,44 +333,75 @@ const ShoppingCartPage = () => {
 
                                 <QuantityAndPrice>
 
+                                    <DeleteContainer>
+                                        <IconContainer>
+                                            <StyledDeleteIcon onClick={() => handleRemoveProduct(product._id)} />
+                                        </IconContainer>
+                                    </DeleteContainer>
                                     <QuantityContainer>
-                                        <RemoveCircleOutlineOutlinedIcon/>
-                                        <Quantity> {product.quantity} </Quantity>
-                                        <AddCircleOutlineOutlinedIcon/>
+                                        <IconContainer>
+                                            <StyledRemoveIcon onClick={() => handleDecreaseQuantity(product._id)} />
+                                        </IconContainer>
+                                        <Quantity>
+                                            {product.quantity}
+                                        </Quantity>
+                                        <IconContainer>
+                                            <StyledAddIcon onClick={() => handleIncreaseQuantity(product._id)} />
+                                        </IconContainer>
                                     </QuantityContainer>
-
-                                    <Price> £ {product.price * product.quantity} </Price>
+                                    <Price>
+                                        £ {product.price * product.quantity}
+                                    </Price>
 
                                 </QuantityAndPrice>
 
-                            </Product>
+                            </Products>
                             ))}
 
-                        </ProductContainer>
-
+                        
                         
                     </InfoContainer>
 
                     <SummaryContainer>
-                        <SummaryTitle> ORDER SUMMARY </SummaryTitle>
+                        {cart.products.length === 0 ? (
+                        <EmptyCartMessage>
+                            THERE ARE NO PRODUCTS IN YOUR SHOPPING CART
+                        </EmptyCartMessage>
+                        ) : (
+                        <>
+                            <SummaryTitle> ORDER SUMMARY </SummaryTitle>
 
-                        <SummaryItem>
+                            <SummaryItem>
                             <SummaryText> SUBTOTAL </SummaryText>
-                            <SummaryPrice> £ {cart.total} </SummaryPrice>
-                        </SummaryItem>
+                            <SummaryPrice> £ {cart.total.toFixed(2)} </SummaryPrice>
+                            </SummaryItem>
 
-                        <SummaryItem>
-                            <SummaryText> SHIPPING </SummaryText>
-                            <SummaryPrice> £{shippingFee} </SummaryPrice>
-                        </SummaryItem>
+                            <SummaryItem>
+                            <SummaryText> DELIVERY FEE </SummaryText>
+                            <SummaryPrice>
+                                {isFreeDelivery ? (
+                                <s>£{regularDeliveryFee.toFixed(2)}</s>
+                                ) : (
+                                `£${regularDeliveryFee.toFixed(2)}`
+                                )}
+                            </SummaryPrice>
+                            </SummaryItem>
 
-                        <SummaryItem type="total">
+                            {isFreeDelivery && (
+                            <SummaryItem>
+                                <SummaryText> FREE DELIVERY </SummaryText>
+                                <SummaryPrice> - £{regularDeliveryFee.toFixed(2)} </SummaryPrice>
+                            </SummaryItem>
+                            )}
+
+                            <SummaryItem type="total">
                             <SummaryText> TOTAL </SummaryText>
-                            <SummaryPrice> £ {grandTotal} </SummaryPrice>
-                        </SummaryItem>
+                            <SummaryPrice> £ {grandTotal.toFixed(2)} </SummaryPrice>
+                            </SummaryItem>
 
-                        <Button onClick={handleCheckout}>CHECKOUT</Button>
-
+                            <Button onClick={handleCheckout}>CHECKOUT</Button>
+                        </>
+                        )}
                     </SummaryContainer>
 
                 </BottomWrapper>

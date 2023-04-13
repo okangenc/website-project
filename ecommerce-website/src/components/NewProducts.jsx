@@ -5,7 +5,7 @@ import styled from "styled-components"
 import React from 'react'
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
+import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined';
 import { Link } from 'react-router-dom';
 
 const Options = styled.div`
@@ -92,7 +92,7 @@ const NewProducts = ({item}) => {
                 </Link>
               </Icon>
               <Icon>
-                  <StarBorderOutlinedIcon/> 
+                  <BookmarkAddOutlinedIcon/> 
               </Icon>
           </Options>
       </Container>

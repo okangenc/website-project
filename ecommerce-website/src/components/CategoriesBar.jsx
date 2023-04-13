@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 const Container = styled.div`
   height: 50px;
@@ -9,21 +11,25 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const Category = styled.span`
+const Category = styled(Link)`
   font-size: 14px;
   margin: 50px;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 `;
 
 const CategoriesBar = () => {
   return (
     <Container>
-      <Category>MENS CLOTHING</Category>
-      <Category>WOMENS CLOTHING</Category>
-      <Category>ACCESSORIES</Category>
-      <Category>EQUIPMENT</Category>
+      <Category to="/category/mens">MENS CLOTHING</Category>
+      <Category to="/category/womens">WOMENS CLOTHING</Category>
+      <Category to="/category/accessories">ACCESSORIES</Category>
+      <Category to="/category/equipment">EQUIPMENT</Category>
     </Container>
   );
 };
 
 export default CategoriesBar;
+
+
