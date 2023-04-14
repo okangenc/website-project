@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react';
 import NavigationBar from '../components/NavigationBar'
 import BannerBar from '../components/BannerBar'
 import CategoriesBar from '../components/CategoriesBar'
@@ -9,15 +9,20 @@ import LandingProducts from '../components/LandingProducts'
 import Footer from '../components/Footer'
 
 const LandingPage = () => {
+  const productsRef = useRef();
+
+  const scrollToProducts = () => {
+    productsRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
   return (
     <div>
       <BannerBar/>
       <NavigationBar/>
       <CategoriesBar/>
-      <LandingPageSlider/>
+      <LandingPageSlider scrollToProducts={scrollToProducts} />
       <LandingCategories/>
       <Newsletter/>
-      <LandingProducts/>
+      <LandingProducts ref={productsRef} />
       <Footer/>
     </div>
   )

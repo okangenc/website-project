@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import { Link as RouterLink } from 'react-router-dom';
+
 
 const Container = styled.div`
   display: flex;
@@ -47,9 +49,11 @@ const LinksContainer = styled.div`
   margin-top: 20px;
 `;
 
-const Link = styled.div`
+const Link = styled(RouterLink)`
   width: 100%;
   cursor: pointer;
+  text-decoration: none; // Optional: Add this line to remove the underline from links
+  color: inherit; // Optional: Add this line to inherit the color from the parent component
 `;
 
 const RightSide = styled.div`
@@ -92,12 +96,12 @@ const Footer = () => {
       <Middle>
         <Header>LINKS</Header>
         <LinksContainer>
-          <Link> HOME </Link>
-          <Link> CLOTHES </Link>
-          <Link> ACCESSORIES </Link>
-          <Link> SHOPPING CART </Link>
-          <Link> TERMS </Link>
-          <Link> EQUIPMENT </Link>
+          <Link to="/"> HOME </Link>
+          <Link to="/category/accessories"> ACCESSORIES </Link>
+          <Link to="/category/mens"> MENS CLOTHING </Link>
+          <Link to="/category/equipment"> EQUIPMENT </Link>
+          <Link to="/category/womens"> WOMENS CLOTHING </Link>
+          <Link to="/shoppingcart"> SHOPPING CART </Link>
         </LinksContainer>
       </Middle>
 

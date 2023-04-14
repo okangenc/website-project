@@ -32,6 +32,19 @@ const Overlay = styled.div`
     transition: background-color 0.3s ease-in-out; // transition effect for background-color
 `;
 
+const Price = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    font-size: 60px;
+    font-weight: bold;
+    color: white;
+    opacity: 0.7;
+    transition: opacity 0.3s ease-in-out;
+`;
+
 const Container = styled.div`
     position: relative;
     flex: 1;
@@ -45,6 +58,10 @@ const Container = styled.div`
     &:hover ${Options}, &:hover ${Overlay} {
         opacity: 1; // increases the opacity of options to 1 (visible) when hovered
         background-color: rgba(0, 0, 0, 0.15); // sets the back background with 50% opacity when hovered
+    }
+
+    &:hover ${Price} {
+        opacity: 0;
     }
 `;
 
@@ -77,26 +94,27 @@ const Icon = styled.div`
 
 
 
-const NewProducts = ({item}) => {
+const NewProducts = ({ item }) => {
     return (
       <Container>
-          <Image src={item.image}/>
-          <Overlay /> {/* add the overlay component */}
-          <Options>
-              <Icon>
-                  <AddShoppingCartOutlinedIcon/> 
-              </Icon>
-              <Icon>
-                <Link to = { `/product/${item._id}` }>
-                    <SearchOutlinedIcon/> 
-                </Link>
-              </Icon>
-              <Icon>
-                  <BookmarkAddOutlinedIcon/> 
-              </Icon>
-          </Options>
+        <Image src={item.image} />
+        <Overlay />
+        <Price>£{item.price}</Price>
+        <Options>
+          <Icon>
+            <AddShoppingCartOutlinedIcon />
+          </Icon>
+          <Icon>
+            <Link to={`/product/${item._id}`}>
+              <SearchOutlinedIcon />
+            </Link>
+          </Icon>
+          <Icon>
+            <BookmarkAddOutlinedIcon />
+          </Icon>
+        </Options>
       </Container>
-    )
-  }
+    );
+};
 
 export default NewProducts

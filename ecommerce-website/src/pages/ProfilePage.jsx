@@ -7,6 +7,9 @@ import CategoriesBar from '../components/CategoriesBar';
 // import footer
 import Footer from '../components/Footer';
 
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 const Container = styled.div``;
 
 const Wrapper = styled.div`
@@ -38,9 +41,11 @@ const SettingsSection = styled.div`
   flex: 1;
 `;
 
+/*
 const Location = styled.div`
   flex: 1;
 `;
+*/
 
 const UserDetails = styled.div`
   display: flex;
@@ -81,6 +86,7 @@ const HrTitle = styled.span`
   margin: 0 10px;
 `;
 
+/*
 const UserLocation = styled.div`
   display: flex;
   flex-direction: column;
@@ -99,6 +105,7 @@ const PostCode = styled.div`
   font-size: 20px;
   letter-spacing: 3px;
 `;
+*/
 
 const Settings = styled.div``;
 
@@ -170,6 +177,16 @@ const BookmarkedProducts = styled.div`
   `;
 
 const ProfilePage = () => {
+
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!currentUser) {
+      navigate('/login');
+    }
+  }, [currentUser, navigate]);
+
   return (
     <Container>
       <BannerBar />
@@ -182,29 +199,30 @@ const ProfilePage = () => {
         <DetailsContainer>
             <PersonalDetails>
             <HrWithTitle>
-                <HrLine /> <HrTitle>PERSONAL DETAILS</HrTitle> <HrLine />
+              <HrLine /> <HrTitle>PERSONAL DETAILS</HrTitle> <HrLine />
             </HrWithTitle>
             <UserDetails>
-                <UserDetailRow>
-                <UserDetail>BRIAN</UserDetail>
-                <UserDetail>GRAHAM</UserDetail>
-                </UserDetailRow>
-                <UserDetail>briangraham</UserDetail>
-                <UserDetail>brian.g@gmail.com</UserDetail>
+              <UserDetailRow>
+                <UserDetail>{currentUser && currentUser.firstName}</UserDetail>
+                <UserDetail>{currentUser && currentUser.lastName}</UserDetail>
+              </UserDetailRow>
+              <UserDetail>{currentUser && currentUser.username}</UserDetail>
+              <UserDetail>{currentUser && currentUser.email}</UserDetail>
             </UserDetails>
-            </PersonalDetails>
+          </PersonalDetails>
 
             <SettingsSection>
             <HrWithTitle>
                 <HrLine /> <HrTitle>SETTINGS</HrTitle> <HrLine />
             </HrWithTitle>
             <Settings>
-                <EmailNotifications> EMAIL NOTIFICATIONS </EmailNotifications>
+                <EmailNotifications> NEWSLETTER NOTIFICATIONS</EmailNotifications>
                 <ChangePasswordButton> CHANGE PASSWORD </ChangePasswordButton>
                 <DeleteAccountButton> DELETE ACCOUNT </DeleteAccountButton>
             </Settings>
             </SettingsSection>
 
+{/*
             <Location>
             <HrWithTitle>
                 <HrLine /> <HrTitle>ADDRESS</HrTitle> <HrLine />
@@ -214,6 +232,8 @@ const ProfilePage = () => {
                 <PostCode>LE11 1AB</PostCode>
             </UserLocation>
             </Location>
+  */}
+
         </DetailsContainer>
 
         <HrWithTitle>

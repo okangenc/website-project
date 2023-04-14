@@ -50,7 +50,6 @@ const Button = styled.button`
     opacity: 70%;
     // transition effect for transform and opacity
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-
     &:hover {
         transform: scale(1.1); // increases the size by 10% (1.1 times the original size) when hovered
         opacity: 100%; // increases the opacity to 100% when hovered
@@ -91,7 +90,7 @@ const Arrow = styled.div`
     z-index: 2;
 `
 
-const LandingPageSlider = () => {
+const LandingPageSlider = ({ scrollToProducts }) => {
     const [slideIndex, setSlideIndex] = useState(0);
     const [disableArrow, setDisableArrow] = useState(false);
     const animationDuration = 1000; // animation duration in milliseconds, prevents button spamming
@@ -116,6 +115,7 @@ const LandingPageSlider = () => {
         }, animationDuration);
     };
 
+
   return (
     <Container>
 
@@ -136,9 +136,7 @@ const LandingPageSlider = () => {
                     <Description>
                         {item.description}
                     </Description>
-                    <Button>
-                        EXPLORE
-                    </Button>
+                    <Button onClick={scrollToProducts}>EXPLORE</Button>
                 </InfoContainer>
 
             </Slider>

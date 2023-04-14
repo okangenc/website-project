@@ -17,6 +17,11 @@ const Category = styled(Link)`
   cursor: pointer;
   text-decoration: none;
   color: inherit;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const CategoriesBar = () => {

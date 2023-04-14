@@ -131,6 +131,7 @@ const InfoRow = styled.div`
   justify-content: space-between;
   margin-bottom: 10px;
   margin-top: 50px;
+  text-transform: uppercase;
 `;
 
 const ButtonAndScaleContainer = styled.div`
@@ -199,7 +200,7 @@ const ProductPage = () => {
             <InfoRow>
               <InfoContainer>
                 <InfoTitle> PRICE: </InfoTitle>
-                <Price> {product.price} </Price>
+                <Price> £ {product.price} </Price>
               </InfoContainer>
   
               <InfoContainer>

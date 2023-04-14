@@ -1,75 +1,75 @@
-// container for the "NewProducts" section of the landing page
-
-import styled from "styled-components"
-import React from 'react'
-// import { newProductsData } from "../data" // imports the array data for the new products from data.js
-import NewProducts from "./NewProducts"
-import { useEffect } from "react"
-import axios from "axios"
-import { useState } from "react"
+import styled from "styled-components";
+import React, { forwardRef, useEffect, useState } from "react";
+import NewProducts from "./NewProducts";
+import axios from "axios";
 
 const Container = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    padding: 10px;
-    justify-content: space-between;
-`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  justify-content: space-between;
+`;
 
-const LandingProducts = ({category, filter, sort}) => {
-
+const LandingProducts = forwardRef(({ category, filter, sort }, ref) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get( category ? `http://localhost:3000/api/products?category=${category}` :
-        "http://localhost:3000/api/products");
-        console.log('API response:', res); // Add this line
+        const res = await axios.get(
+          category
+            ? `http://localhost:3000/api/products?category=${category}`
+            : "http://localhost:3000/api/products"
+        );
+        console.log("API response:", res);
         setProducts(res.data);
-      } catch(err) {
-        console.error('Error fetching products:', err); // Add this line to log errors
+      } catch (err) {
+        console.error("Error fetching products:", err);
       }
-    }
-    getProducts()
+    };
+    getProducts();
   }, [category]);
-  
 
-  // filtering objects and arrays in JS
   useEffect(() => {
-    category && setFilteredProducts(
-        products.filter(item => Object.entries(filter).every(([key, value]) => item[key].includes(value)))
-    );
+    category &&
+      setFilteredProducts(
+        products.filter((item) =>
+          Object.entries(filter).every(([key, value]) => item[key].includes(value))
+        )
+      );
   }, [category, products, filter]);
 
-  console.log('Products:', products);
-  console.log('Filtered Products:', filteredProducts);
+  console.log("Products:", products);
+  console.log("Filtered Products:", filteredProducts);
 
-  // sorting the products in the category page
   useEffect(() => {
     if (sort === "newest") {
-      setFilteredProducts (prev => [...prev].sort( (x, y) => x.createdAt - y.createdAt ));
+      setFilteredProducts((prev) =>
+        [...prev].sort((x, y) => new Date(y.createdAt) - new Date(x.createdAt))
+      );
     } else if (sort === "ascending") {
-      setFilteredProducts (prev => [...prev].sort( (x, y) => x.price - y.price ));
+      setFilteredProducts((prev) => [...prev].sort((x, y) => x.price - y.price));
     } else {
-      setFilteredProducts (prev => [...prev].sort( (x, y) => y.price - x.price ));
-    };
+      setFilteredProducts((prev) => [...prev].sort((x, y) => y.price - x.price));
+    }
   }, [sort]);
 
-  // need to add a condition so the products still show up on the landing page
-  // use .slice so that the landing page only displays 12 products at all times
-  // (0, 12) means only 12 products are shown
+  // Sort products by newest first
+  const sortedProducts = [...products].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
   return (
-    <Container>
+    <Container ref={ref}>
       {category
         ? filteredProducts.map((item) => <NewProducts item={item} key={item.id} />)
-        : products
-          .slice(0, 12)
-          .map((item) => <NewProducts item={item} key={item.id} />)
+        : sortedProducts
+            .slice(0, 12)
+            .map((item) => <NewProducts item={item} key={item.id} />)
       }
     </Container>
   );
-  
-};
+});
 
-export default LandingProducts
+export default LandingProducts;

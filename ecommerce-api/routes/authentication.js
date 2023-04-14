@@ -4,12 +4,15 @@ const User = require("../models/User")
 const CryptoJS = require("crypto-js")
 const jwt = require("jsonwebtoken");
 
+
 // register post request
 router.post("/register", async (req, res) => {
     const encryptedPassword = CryptoJS.AES.encrypt(req.body.password, process.env.PASSWORD_SECRET).toString();
     console.log('Encrypted password:', encryptedPassword);
 
     const newUser = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         username: req.body.username,
         email: req.body.email,
         password: encryptedPassword,
@@ -37,6 +40,8 @@ router.post("/login", async (req, res) => {
         } else {
             // create a new object with the required user details (does not show password for security reasons)
             const userWithoutPassword = {
+                firstName: user.firstName,
+                lastName: user.lastName,
                 _id: user._id,
                 username: user.username,
                 email: user.email,

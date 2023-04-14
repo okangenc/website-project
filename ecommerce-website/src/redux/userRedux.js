@@ -13,18 +13,24 @@ const userRedux = createSlice({
         },
         loginSuccess: (state, action) => {
             state.isFetching = false;
-            state.currentUser = action.payload
-            console.log("User reducer state updated: ", state); // Add this line
-        },
+            state.currentUser = {
+              ...action.payload,
+              firstName: action.payload.firstName,
+              lastName: action.payload.lastName,
+            };
+          },
         loginFailure: (state) => {
             state.isFetching = false;
             state.error = true;
+        },
+        logout: (state) => { // Add this logout action
+            state.currentUser = null;
         },
     },
 });
 
 // add reducers
-export const { loginStart, loginSuccess, loginFailure } = userRedux.actions
+export const { loginStart, loginSuccess, loginFailure, logout } = userRedux.actions
 
 export default userRedux.reducer
 

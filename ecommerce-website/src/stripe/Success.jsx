@@ -25,7 +25,7 @@ const Success = () => {
     <SuccessContainer>
       <SuccessTitle>Payment Successful</SuccessTitle>
       <SuccessMessage>
-        Thank you for your payment. Your transaction has been completed.
+        Your transaction has been completed. Thank you for choosing to shop with Pazar. 
       </SuccessMessage>
     </SuccessContainer>
   );

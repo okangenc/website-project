@@ -34,6 +34,7 @@ const Wrapper = styled.div`
 const Title = styled.h1`
     font-weight: 300;
     text-align: center;
+    margin-top: 20px;
 `
 
 // top wrapper
@@ -161,9 +162,13 @@ const Name = styled.span``
 
 const ID = styled.span``
 
-const Colour = styled.span``
+const Colour = styled.span`
+    text-transform: uppercase;
+`
 
-const Size = styled.span``
+const Size = styled.span`
+    text-transform: uppercase;
+`
 
 const IconContainer = styled.div`
   cursor: pointer;

@@ -11,19 +11,20 @@ import Footer from '../components/Footer'
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
-
 const Container = styled.div`
     
 `
 
 const Title = styled.h1`
     margin: 20px;
+    // text-align: center;
 `
 
 // contains the sort and filter elements
 const FilterContainer = styled.div`
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 `
 
 const FilterOptions = styled.div`
@@ -67,40 +68,39 @@ const CategoryPage = () => {
         <NavigationBar/>
         <CategoriesBar/>
 
-        <Title>
-            { category }
-        </Title>
-
         <FilterContainer>
             <FilterOptions>
                 <FilterHeader>
                     SORT
                 </FilterHeader>
 
-                <Select onChange = { event => setSort(event.target.value)}>
-                    <Option value = "newest"> NEWEST </Option>
-                    <Option value = "ascending"> PRICE (ASCENDING) </Option>
-                    <Option value = "descending"> PRICE (DESCENDING) </Option>
+                <Select onChange={event => setSort(event.target.value)}>
+                    <Option value="" disabled selected> SORT </Option>
+                    <Option value="newest"> NEWEST </Option>
+                    <Option value="ascending"> PRICE (ASCENDING) </Option>
+                    <Option value="descending"> PRICE (DESCENDING) </Option>
                 </Select>
 
             </FilterOptions>
+
+            <Title>{category.toUpperCase()}</Title>
+
             <FilterOptions>
                 <FilterHeader>
                     FILTER
                 </FilterHeader>
 
-                <Select name="size" onChange = { handleFilter }>
-                    <Option disabled> SIZE </Option>
+                <Select name="size" onChange={handleFilter}>
+                    <Option value="" disabled selected> SIZE </Option>
                     <Option> XS </Option>
                     <Option> S </Option>
                     <Option> M </Option>
                     <Option> L </Option>
                     <Option> XL </Option>
-                    <Option> XXL </Option>
                 </Select>
 
-                <Select name="colour" onChange = { handleFilter }>
-                    <Option disabled> COLOUR </Option>
+                <Select name="colour" onChange={handleFilter}>
+                    <Option value="" disabled selected> COLOUR </Option>
                     <Option> BLACK </Option>
                     <Option> WHITE </Option>
                     <Option> GRAY </Option>
@@ -111,7 +111,6 @@ const CategoryPage = () => {
                     <Option> PINK </Option>
                     <Option> PURPLE </Option>
                     <Option> BROWN </Option>
-                    <Option> MULTI COLOURED </Option>
                 </Select>
 
             </FilterOptions>
