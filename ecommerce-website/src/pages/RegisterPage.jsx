@@ -87,24 +87,25 @@ const changeColours = keyframes`
 
 // button
 const Button = styled.button`
-    padding: 10px 20px;
-    border: none;
-    width: 25%;
-    background-color: #a8e7f5;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 30px;
-    margin-top: 30px;
-    opacity: 100%;
-    transition: width 0.3s ease-in-out;
+  padding: 10px 20px;
+  border: none;
+  width: 25%;
+  background-color: #a8e7f5;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  opacity: ${({ disabled }) => (disabled ? '40%' : '100%')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+  transition: width 0.3s ease-in-out;
 
-    &:hover {
-        width: 40%; 
-        opacity: 70%;
+  &:hover {
+    width: 40%;
+    opacity: ${({ disabled }) => (disabled ? '40%' : '70%')};
   }
-`
+`;
 
 const TopLogo = styled.div`
   position: absolute;
@@ -129,17 +130,6 @@ const AnimatedBoltIcon = styled(BoltIcon)`
 const SuccessMessage = styled.p`
   color: #94f28b;
 `;
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -211,7 +201,9 @@ const RegisterPage = () => {
           <Input name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} type="password" placeholder="CONFIRM PASSWORD" />
         </Form>
 
-        <Button type="submit" onClick={handleRegister} disabled={!allFieldsFilled}>CREATE ACCOUNT</Button>
+        <Button type="submit" onClick={handleRegister} disabled={!allFieldsFilled}>
+          CREATE ACCOUNT
+        </Button>
 
         {isSubmitted && <SuccessMessage>ACCOUNT SUCCESSFULLY CREATED</SuccessMessage>}
 

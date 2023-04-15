@@ -148,7 +148,7 @@ const LoginPage = () => {
           <Input type="password" placeholder="PASSWORD" onChange = {(event) => setPassword(event.target.value)} />
           <Button onClick = {handleClick} disabled = {isFetching}> SIGN-IN </Button>
 
-          { error && <LoginError> INVALID LOGIN </LoginError>}
+          { error === "INVALID_LOGIN" && <LoginError> INVALID LOGIN </LoginError>}
 
           <BottomText> DON'T HAVE AN ACCOUNT? </BottomText>
           <SignUp> SIGN-UP </SignUp>

@@ -11,7 +11,7 @@ router.post("/register", async (req, res) => {
     console.log('Encrypted password:', encryptedPassword);
 
     const newUser = new User({
-        firstName: req.body.firstName,
+        firstName: req.body.firstName, 
         lastName: req.body.lastName,
         username: req.body.username,
         email: req.body.email,
@@ -30,13 +30,15 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username });
-        !user && res.status(401).json("Wrong Username");
+        if (!user) {
+            return res.status(401).json("Wrong Username");
+        }
 
         const hashedPassword = CryptoJS.AES.decrypt(user.password, process.env.PASSWORD_SECRET);
         const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
 
         if (originalPassword !== req.body.password) {
-            res.status(401).json("Wrong Password");
+            return res.status(401).json("Wrong Password");
         } else {
             // create a new object with the required user details (does not show password for security reasons)
             const userWithoutPassword = {
@@ -68,5 +70,6 @@ router.post("/login", async (req, res) => {
         res.status(500).json(err);
     }
 });
+
 
 module.exports = router;
