@@ -66,10 +66,24 @@ router.post("/login", async (req, res) => {
             // ... = spread operator
             res.status(200).json({ ...userWithoutPassword, accessToken });
         }
-    } catch (err) {
+    } catch (err) { 
         res.status(500).json(err);
     }
 });
+
+// check username in register
+router.post("/check-username", async (req, res) => {
+    try {
+      const user = await User.findOne({ username: req.body.username });
+      if (user) {
+        res.status(200).json({ exists: true });
+      } else {
+        res.status(200).json({ exists: false });
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
 
 
 module.exports = router;

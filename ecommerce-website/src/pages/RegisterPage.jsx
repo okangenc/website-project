@@ -144,39 +144,65 @@ const RegisterPage = () => {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-  
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const checkUsername = async (username) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/authentication/register', {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
+      const response = await axios.post("http://localhost:3000/api/authentication/check-username", {
+        username,
       });
   
-      console.log(response.data);
-  
-      setIsSubmitted(true);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      });
+      return response.data.exists;
     } catch (error) {
       console.error(error);
     }
   };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setErrorMessage("");
+
+    const usernameExists = await checkUsername(formData.username);
+
+    if (usernameExists) {
+      setErrorMessage("Username already taken");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/authentication/register",
+        formData
+      );
+      if (response.status === 201) {
+        setIsSubmitted(true);
+
+        // Clear the input fields
+        setFormData({
+          firstName: "",
+          lastName: "",
+          username: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  
+  
+  
   
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const allFieldsFilled = Object.values(formData).every((field) => field.trim() !== '');
+
+  
 
   return (
     <Container>
@@ -193,19 +219,58 @@ const RegisterPage = () => {
         <Title>CREATE AN ACCOUNT</Title>
 
         <Form onSubmit={handleRegister}>
-          <Input name="firstName" value={formData.firstName} onChange={handleChange} type="text" placeholder="FIRST NAME" />
-          <Input name="lastName" value={formData.lastName} onChange={handleChange} type="text" placeholder="LAST NAME" />
-          <Input name="username" value={formData.username} onChange={handleChange} type="text" placeholder="USERNAME" />
-          <Input name="email" value={formData.email} onChange={handleChange} type="email" placeholder="EMAIL" />
-          <Input name="password" value={formData.password} onChange={handleChange} type="password" placeholder="PASSWORD" />
-          <Input name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} type="password" placeholder="CONFIRM PASSWORD" />
+          <Input
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            type="text"
+            placeholder="FIRST NAME"
+          />
+          <Input
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            type="text"
+            placeholder="LAST NAME"
+          />
+          <Input
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            type="text"
+            placeholder="USERNAME"
+          />
+          <Input
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            type="email"
+            placeholder="EMAIL"
+          />
+          <Input
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            type="password"
+            placeholder="PASSWORD"
+          />
+          <Input
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            type="password"
+            placeholder="CONFIRM PASSWORD"
+          />
+
+          <Button type="submit" disabled={!allFieldsFilled}>
+            CREATE ACCOUNT
+          </Button>
         </Form>
 
-        <Button type="submit" onClick={handleRegister} disabled={!allFieldsFilled}>
-          CREATE ACCOUNT
-        </Button>
-
-        {isSubmitted && <SuccessMessage>ACCOUNT SUCCESSFULLY CREATED</SuccessMessage>}
+        {isSubmitted && (
+          <SuccessMessage>ACCOUNT SUCCESSFULLY CREATED</SuccessMessage>
+        )}
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
         <BottomText>ALREADY HAVE AN ACCOUNT?</BottomText>
         <SignIn> <Link Link to="/login">SIGN-IN </Link></SignIn>
