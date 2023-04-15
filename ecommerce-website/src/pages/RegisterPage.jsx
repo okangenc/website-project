@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import BoltIcon from '@mui/icons-material/Bolt';
+
+import axios from 'axios';
 
 const Container = styled.div`
   display: flex;
@@ -32,6 +34,13 @@ const RightSide = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 `;
 
 const Input = styled.input`
@@ -116,34 +125,101 @@ const AnimatedBoltIcon = styled(BoltIcon)`
   margin-right: 10px;
 `;
 
+const SuccessMessage = styled.p`
+  color: #94f28b;
+`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const RegisterPage = () => {
-    return (
-      <Container>
-        <LeftSide>
-          <BackgroundImage />
-        </LeftSide>
-        <TopLogo>
-            <LogoText>P A</LogoText>
-            <AnimatedBoltIcon />
-            <LogoText>A R</LogoText>
-        </TopLogo>
-        <RightSide>
-          <Title>CREATE AN ACCOUNT</Title>
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
   
-          <Input type="text" placeholder="FIRST NAME" />
-          <Input type="text" placeholder="LAST NAME" />
-          <Input type="text" placeholder="USERNAME" />
-          <Input type="email" placeholder="EMAIL" />
-          <Input type="password" placeholder="PASSWORD" />
-          <Input type="password" placeholder="CONFIRM PASSWORD" />
+    try {
+      const response = await axios.post('http://localhost:3000/api/authentication/register', {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
   
-          <Button> CREATE ACCOUNT</Button>
+      console.log(response.data);
   
-          <BottomText>ALREADY HAVE AN ACCOUNT?</BottomText>
-          <SignIn>SIGN-IN</SignIn>
-        </RightSide>
-      </Container>
-    );
+      setIsSubmitted(true);
+      setFormData({
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
   
-  export default RegisterPage;
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const allFieldsFilled = Object.values(formData).every((field) => field.trim() !== '');
+
+  return (
+    <Container>
+      <LeftSide>
+        <BackgroundImage />
+      </LeftSide>
+      <TopLogo>
+          <LogoText>P A</LogoText>
+          <AnimatedBoltIcon />
+          <LogoText>A R</LogoText>
+      </TopLogo>
+      <RightSide>
+
+        <Title>CREATE AN ACCOUNT</Title>
+
+        <Form onSubmit={handleRegister}>
+          <Input name="firstName" value={formData.firstName} onChange={handleChange} type="text" placeholder="FIRST NAME" />
+          <Input name="lastName" value={formData.lastName} onChange={handleChange} type="text" placeholder="LAST NAME" />
+          <Input name="username" value={formData.username} onChange={handleChange} type="text" placeholder="USERNAME" />
+          <Input name="email" value={formData.email} onChange={handleChange} type="email" placeholder="EMAIL" />
+          <Input name="password" value={formData.password} onChange={handleChange} type="password" placeholder="PASSWORD" />
+          <Input name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} type="password" placeholder="CONFIRM PASSWORD" />
+        </Form>
+
+        <Button type="submit" onClick={handleRegister} disabled={!allFieldsFilled}>CREATE ACCOUNT</Button>
+
+        {isSubmitted && <SuccessMessage>ACCOUNT SUCCESSFULLY CREATED</SuccessMessage>}
+
+        <BottomText>ALREADY HAVE AN ACCOUNT?</BottomText>
+        <SignIn>SIGN-IN</SignIn>
+      </RightSide>
+    </Container>
+  );
+};
+
+export default RegisterPage;
+
