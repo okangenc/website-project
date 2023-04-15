@@ -9,6 +9,7 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import { useSelector, useDispatch } from "react-redux" // import useDispatch
 import { logout } from '../redux/userRedux'; // import the logout action
 import { Link } from 'react-router-dom';
+import { clearCart } from '../redux/shoppingCartRedux';
 
 import { publicRequest } from '../requestMethods';
 
@@ -154,11 +155,12 @@ const NavigationBar = () => {
     }
   };
 
-  const currentUser = useSelector((state) => state.user.currentUser); // Add this line
-  const dispatch = useDispatch(); // Add this line
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(clearCart()); // clears cart
   };
   
   return (

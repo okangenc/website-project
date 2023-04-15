@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import BoltIcon from '@mui/icons-material/Bolt';
+import { Link } from 'react-router-dom';
 
 import axios from 'axios';
 
@@ -215,7 +216,7 @@ const RegisterPage = () => {
         {isSubmitted && <SuccessMessage>ACCOUNT SUCCESSFULLY CREATED</SuccessMessage>}
 
         <BottomText>ALREADY HAVE AN ACCOUNT?</BottomText>
-        <SignIn>SIGN-IN</SignIn>
+        <SignIn> <Link Link to="/login">SIGN-IN </Link></SignIn>
       </RightSide>
     </Container>
   );

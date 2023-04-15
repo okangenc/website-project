@@ -12,7 +12,7 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
 // for cart functionalities
-import { clearCart, increaseQuantity, decreaseQuantity, removeProduct } from "../redux/shoppingCartRedux";
+import { clearCart, increaseQuantity, decreaseQuantity, removeProduct } from "../redux/shoppingCartRedux"; 
 import { useDispatch } from "react-redux";
 
 // for stripe payments
