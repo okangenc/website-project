@@ -146,6 +146,8 @@ const RegisterPage = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
+
   const checkUsername = async (username) => {
     try {
       const response = await axios.post("http://localhost:3000/api/authentication/check-username", {
@@ -158,15 +160,47 @@ const RegisterPage = () => {
     }
   };
 
+  const [passwordRequirementsError, setPasswordRequirementsError] = useState(false);
+
+  const checkPasswordRequirements = (password) => {
+    const lengthRequirement = password.length >= 8;
+    const uppercaseRequirement = /[A-Z]/.test(password);
+    const numberRequirement = /\d/.test(password);
+
+    return lengthRequirement && uppercaseRequirement && numberRequirement;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setErrorMessage("");
+    setPasswordRequirementsError(false);
 
     const usernameExists = await checkUsername(formData.username);
 
     if (usernameExists) {
       setErrorMessage("Username already taken");
       return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordMatchError(true);
+      return;
+    } else {
+      setPasswordMatchError(false);
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordMatchError(true);
+      return;
+    } else {
+      setPasswordMatchError(false);
+    }
+
+    if (!checkPasswordRequirements(formData.password)) {
+      setPasswordRequirementsError(true);
+      return;
+    } else {
+      setPasswordRequirementsError(false);
     }
 
     try {
@@ -262,9 +296,25 @@ const RegisterPage = () => {
             placeholder="CONFIRM PASSWORD"
           />
 
+          {passwordMatchError && (
+            <p style={{ color: "red" }}>PASSWORDS DO NOT MATCH</p>
+          )}
+
+          {passwordRequirementsError && (
+            <div style={{ color: "red", marginBottom: "20px" }}>
+              <p>THE PASSWORD MUST MATCH THESE REQUIREMENTS:</p>
+              <ul>
+                <li>PASSWORD MUST CONTAIN A NUMBER</li>
+                <li>PASSWORD MUST CONTAIN AN UPPERCASE LETTER</li>
+                <li>PASSWORD MUST HAVE A LENGTH GREATER 8</li>
+              </ul>
+            </div>
+          )}
+
           <Button type="submit" disabled={!allFieldsFilled}>
             CREATE ACCOUNT
           </Button>
+
         </Form>
 
         {isSubmitted && (
