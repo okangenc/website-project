@@ -23,8 +23,8 @@ router.post("/create-checkout-session", async (req, res) => {
         allowed_countries: ["GB", "US"], // You can add more country codes or use ['*'] to allow all countries
       },
       mode: "payment",
-      success_url: "http://localhost:3001/success",
-      cancel_url: "http://localhost:3001/cancel",
+      success_url: "http://localhost:3000/success",
+      cancel_url: "http://localhost:3000/cancel",
     });
 
     res.json({ sessionId: session.id }); // Make sure you return sessionId correctly
