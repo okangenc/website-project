@@ -112,13 +112,13 @@ const Footer = () => {
             <ContactIcons>
               <EmailOutlinedIcon />
             </ContactIcons>
-            O.Genc-20@student.lboro.ac.uk
+            email@email.com
           </ContactItem>
           <ContactItem>
             <ContactIcons>
               <PlaceOutlinedIcon />
             </ContactIcons>
-            Loughborough University
+            Location
           </ContactItem>
           <ContactItem>
             <ContactIcons>
