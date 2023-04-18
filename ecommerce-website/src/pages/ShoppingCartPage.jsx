@@ -15,7 +15,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { clearCart, increaseQuantity, decreaseQuantity, removeProduct } from "../redux/shoppingCartRedux"; 
 import { useDispatch } from "react-redux";
 
-// for stripe payments
+// for stripe payments 
 import { useSelector } from 'react-redux';
 import { loadStripe } from '@stripe/stripe-js';
 import React, { useCallback } from 'react';
